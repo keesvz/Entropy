@@ -1,6 +1,6 @@
-Estimate 'reverse entropy' of a set of moving 2D-particles inside a 2D box. 
-Kees van Zon.
-Published under MIT license.
+Estimate 'reverse entropy' of a set of moving 2D-particles inside a 2D box.<br>
+Kees van Zon.<br>
+Published under MIT license.<br>
 
 The system's entropy is (roughly speaking) the degree to which the particles are spreadout in the box.
 This toy tool determines a simple 'reverse entropy' - the degree to which the particles are clustered together - defined as
