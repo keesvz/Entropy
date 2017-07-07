@@ -12,7 +12,7 @@ This toy tool determines a simple 'reverse entropy' - the degree to which the pa
 Usage:
 * Set grid size G; splits box into GxG squares used for reverse entropy calculations.
 * Set number of particles in box.
-* Set maximum initial horizontal and vertical particle speed Vmax. The initial speed of each particle is random
+* Set maximum initial horizontal and vertical particle speed Vmax. The initial speed of each particle in either direction is random
 between [-Vmax, Vmax].
 * Set a seed for the pseudo-random number generator.
 * Check 'Display motion'.
