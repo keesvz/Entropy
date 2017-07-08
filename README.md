@@ -21,3 +21,5 @@ between [-Vmax, Vmax].
 While running, the number of iterations and the maximum X, Y ans XY reverse entropy are listed.
 While stopped, the particle configuration can be saved, reset, or loaded Moreover, particle configurations with maximum
 reverse entropy encountered during the simulation can be loaded.
+
+Executable last compiled and tested on Windows 10 with .Net 4.5
