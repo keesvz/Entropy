@@ -425,7 +425,7 @@ namespace Entropy
             this.Controls.Add(this.canvas);
             this.DoubleBuffered = true;
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "Entropy";
             this.ResumeLayout(false);
             this.PerformLayout();
 
