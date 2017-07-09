@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Entropy
@@ -129,27 +130,27 @@ namespace Entropy
             while (running)
             {
                 // Clear grid
-                for (int i = 0; i < gridX; i++)
-                    for (int j = 0; j < gridY; j++)
+                for (var i = 0; i < gridX; i++)
+                    for (var j = 0; j < gridY; j++)
                         grid[i, j] = new List<int>();
 
                 // Apply linear motion
-                for (int k = 0; k < positions.Count; k++)
+                Parallel.For(0, positions.Count, k =>
                 {
                     positions[k].x += velocities[k].x;
                     positions[k].y += velocities[k].y;
                     CheckWallBounce(k);
                     grid[(int)positions[k].x, (int)positions[k].y].Add(k);
-                }
+                });
 
                 // Handle particle collisions
-                for (int k = 0; k < positions.Count; k++)
+                for (var k = 0; k < positions.Count; k++)
                 {
                     I = (int)positions[k].x;
                     J = (int)positions[k].y;
                     if (grid[I, J].Count > 1)
                     {
-                        foreach (int n in grid[I, J])
+                        foreach (var n in grid[I, J])
                             if (n != k)
                             {
                                 dx = positions[k].x - positions[n].x;
@@ -175,10 +176,10 @@ namespace Entropy
                         jmin = J - 1; if (jmin < 0) jmin = 0;
                         jmax = J + 1; if (jmax == gridY) jmax = gridY - 1;
 
-                        for (int i = imin; i <= imax; i++)
-                            for (int j = jmin; j <= jmax; j++)
+                        for (var i = imin; i <= imax; i++)
+                            for (var j = jmin; j <= jmax; j++)
                                 if ((i != I) || (j != J))
-                                    foreach (int n in grid[i, j])
+                                    foreach (var n in grid[i, j])
                                     {
                                         dx = positions[k].x - positions[n].x;
                                         dy = positions[k].y - positions[n].y;
@@ -205,7 +206,7 @@ namespace Entropy
                 // Calculate average distance
                 var sum = 0.0;
                 for (int i = 0; i < nrParticles; i++)
-                    for (int j = i + 1; j < nrParticles; j++)
+                    for (var j = i + 1; j < nrParticles; j++)
                     {
                         var p1 = positions[i];
                         var p2 = positions[j];
@@ -213,7 +214,7 @@ namespace Entropy
                     }
                 var avgDistance = 2 * sum / (nrParticles * (nrParticles - 1));
 
-                // Update minumum
+                // Update minimum
                 if (avgDistance < minAvgDistance)
                 {
                     minAvgDistance = avgDistance;
@@ -241,7 +242,7 @@ namespace Entropy
 
         private void CheckWallBounce(int k)
         {
-            double x = positions[k].x;
+            var x = positions[k].x;
             if (x <= minX)
             {
                 positions[k].x = twiceMinX - x;
@@ -253,7 +254,7 @@ namespace Entropy
                 velocities[k].x = -velocities[k].x;
             }
 
-            double y = positions[k].y;
+            var y = positions[k].y;
             if (y <= minY)
             {
                 positions[k].y = twiceMinY - y;
@@ -270,14 +271,14 @@ namespace Entropy
         private void Collide(int k, int n, double dx, double dy, double dSquared)
         {
             // Calculate distance between ball centers
-            double d = Math.Sqrt(dSquared); // d <= r1 + r2
+            var d = Math.Sqrt(dSquared); // d <= r1 + r2
 
             // Calculate component of velocity in the direction of (dx, dy)
-            double vp1 = (velocities[k].x * dx + velocities[k].y * dy) / d;
-            double vp2 = (velocities[n].x * dx + velocities[n].y * dy) / d;
+            var vp1 = (velocities[k].x * dx + velocities[k].y * dy) / d;
+            var vp2 = (velocities[n].x * dx + velocities[n].y * dy) / d;
 
             // Collision should have occurred at t - dt, when d = r1 + r2 (= diameter when r1 = r2)
-            double dt = (diameter - d) / Math.Abs(vp1 - vp2);
+            var dt = (diameter - d) / Math.Abs(vp1 - vp2);
 
             // Move balls backward
             positions[k].x -= velocities[k].x * dt;
@@ -286,18 +287,18 @@ namespace Entropy
             positions[n].y -= velocities[n].y * dt;
 
             // Unit vector in the direction of the collision
-            double ax = dx / d;
-            double ay = dy / d;
+            var ax = dx / d;
+            var ay = dy / d;
 
             // Project velocities to these axes
-            double va1 =  velocities[k].x * ax + velocities[k].y * ay;
-            double vb1 = -velocities[k].x * ay + velocities[k].y * ax;
-            double va2 =  velocities[n].x * ax + velocities[n].y * ay;
-            double vb2 = -velocities[n].x * ay + velocities[n].y * ax;
+            var va1 =  velocities[k].x * ax + velocities[k].y * ay;
+            var vb1 = -velocities[k].x * ay + velocities[k].y * ax;
+            var va2 =  velocities[n].x * ax + velocities[n].y * ay;
+            var vb2 = -velocities[n].x * ay + velocities[n].y * ax;
 
             // New velocities in these axes (after collision)
-            double vaP1 = va2;
-            double vaP2 = va1;
+            var vaP1 = va2;
+            var vaP2 = va1;
 
             // Undo projection
             velocities[k].x = vaP1 * ax - vb1 * ay;
@@ -314,23 +315,23 @@ namespace Entropy
 
         private void CreateHistograms()
         {
-            int count;
+            var count = 0;
             histX.Clear();
-            for (int i = 0; i < gridX; i++)
+            Parallel.For(0, gridX, i =>
             {
                 count = 0;
                 for (int j = 0; j < gridY; j++)
                     count += grid[i, j].Count;
                 histX.Add(count);
-            }
+            });
             histY.Clear();
-            for (int j = 0; j < gridY; j++)
+            Parallel.For(0, gridY, j =>
             {
                 count = 0;
                 for (int i = 0; i < gridX; i++)
                     count += grid[i, j].Count;
                 histY.Add(count);
-            }
+            });
         }
 
         private void Reset()
@@ -401,16 +402,16 @@ namespace Entropy
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            string fName = "";
+            var fName = "";
             if (sender == btnLoadMin)
                 fName = "Smin.txt";
             else
                 fName = "state.txt";
 
-            string s;
-            string[] sep0 = new string[] { ": " };
-            char[] sep1 = new char[] { 'x' };
-            char[] sep2 = new char[] { ',' };
+            var s = "";
+            var sep0 = new string[] { ": " };
+            var sep1 = new char[] { 'x' };
+            var sep2 = new char[] { ',' };
             using (StreamReader r = new StreamReader(fName))
             {
                 nrParticles = int.Parse(r.ReadLine().Split(sep0, StringSplitOptions.None)[1]);
