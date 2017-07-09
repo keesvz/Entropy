@@ -331,7 +331,7 @@ namespace Entropy
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(760, 531);
+            this.ClientSize = new System.Drawing.Size(759, 531);
             this.Controls.Add(this.cmbParticles);
             this.Controls.Add(this.cmbGrid);
             this.Controls.Add(this.cmbMaxInitVy);
@@ -356,6 +356,8 @@ namespace Entropy
             this.Controls.Add(this.histogramX);
             this.Controls.Add(this.canvas);
             this.DoubleBuffered = true;
+            this.MaximumSize = new System.Drawing.Size(775, 570);
+            this.MinimumSize = new System.Drawing.Size(775, 570);
             this.Name = "Form1";
             this.Text = "Entropy";
             this.ResumeLayout(false);

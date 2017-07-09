@@ -135,13 +135,13 @@ namespace Entropy
                         grid[i, j] = new List<int>();
 
                 // Apply linear motion
-                Parallel.For(0, positions.Count, k =>
+                for (var k = 0; k < positions.Count; k++)
                 {
                     positions[k].x += velocities[k].x;
                     positions[k].y += velocities[k].y;
                     CheckWallBounce(k);
                     grid[(int)positions[k].x, (int)positions[k].y].Add(k);
-                });
+                }
 
                 // Handle particle collisions
                 for (var k = 0; k < positions.Count; k++)
