@@ -2,12 +2,9 @@ Estimate 'reverse entropy' of a set of moving 2D-particles inside a 2D box.<br>
 Kees van Zon.<br>
 Published under MIT license.<br>
 
-The system's entropy is (roughly speaking) the degree to which the particles are spreadout in the box.
-This toy tool determines a simple 'reverse entropy' - the degree to which the particles are clustered together - defined as
-* X: sum(n) (number of particles in row n)^2)
-* Y: sum(n) (number of particles in column n)^2)
-* XY: sum(n) (number of particles in row n-1 + number of particles in row n) * 
-             (number of particles in column n-1 + number of particles in column n)
+The system's entropy is (roughly speaking) a measure of the degree to which the particles are spreadout in the box.
+This toy tool determines a simple entropy of a given configuration of particles as the logarithm of the average distance between
+the particles.
 
 Usage:
 * Set grid size G; splits box into GxG squares used for reverse entropy calculations.
@@ -18,8 +15,8 @@ between [-Vmax, Vmax].
 * Check 'Display motion'.
 * Hit Start to commence simulation.
 
-While running, the number of iterations and the maximum X, Y ans XY reverse entropy are listed.
-While stopped, the particle configuration can be saved, reset, or loaded Moreover, particle configurations with maximum
-reverse entropy encountered during the simulation can be loaded.
+While running, the number of iterations and the minimum entropy encountered are listed.
+While stopped, the particle configuration can be saved, reset, or loaded. Moreover, the simulation's particle configuration with
+the smallest entropy can be loaded.
 
 Executable last compiled and tested on Windows 10 with .Net 4.5

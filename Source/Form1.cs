@@ -13,7 +13,7 @@ namespace Entropy
         private List<Vector> velocities = new List<Vector>();
         private List<Color> colors = new List<Color>();
         private List<Brush> brushes = new List<Brush>();
-        private int particles;
+        private int nrParticles;
         private double radius = 0.5;
         private double diameter;
         private double diameterSquared;
@@ -33,15 +33,13 @@ namespace Entropy
         private List<int> histY = new List<int>();
         private int iterations = 0;
         private DateTime start;
-        private int maxClusteringX = 0;
-        private int maxClusteringY = 0;
-        private int maxClusteringXY = 0;
         private bool running = false;
         private bool done = false;
         private bool continuation = false;
         private bool change = false;
         private Properties.Settings settings = Properties.Settings.Default;
         private bool respondToChange = false;
+        private double minAvgDistance = double.MaxValue;
 
         public Form1()
         {
@@ -51,13 +49,13 @@ namespace Entropy
                 cmbSeed.Items.Add(i.ToString());
 
             cmbGrid.SelectedItem = settings.Grid.ToString();
-            cmbParticles.SelectedItem = settings.Particles.ToString();
+            cmbParticles.SelectedItem = settings.NrParticles.ToString();
             cmbMaxInitVx.SelectedItem = settings.MaxInitVx.ToString();
             cmbMaxInitVy.SelectedItem = settings.MaxInitVy.ToString();
             cmbSeed.SelectedItem = settings.Seed.ToString();
 
             gridX = gridY = settings.Grid;
-            particles = settings.Particles;
+            nrParticles = settings.NrParticles;
             maxInitVx = settings.MaxInitVx;
             maxInitVy = settings.MaxInitVy;
             seed = settings.Seed;
@@ -93,11 +91,9 @@ namespace Entropy
         private void Initialize()
         {
             iterations = 0;
-            maxClusteringX = 0;
-            maxClusteringY = 0;
-            maxClusteringXY = 0;
+            minAvgDistance = double.MaxValue;
 
-            UpdateLabel();
+            UpdateLabels();
 
             grid = new List<int>[gridX, gridY];
             for (int i = 0; i < gridX; i++)
@@ -109,7 +105,7 @@ namespace Entropy
             positions.Clear();
             velocities.Clear();
             colors.Clear();
-            for (int k = 0; k < particles; k++)
+            for (int k = 0; k < nrParticles; k++)
             {
                 positions.Add(new Vector(rnd.Next((int)(minX + radius), (int)(maxX - radius)), rnd.Next((int)(minY + radius), (int)(maxY + radius))));
                 //positions.Add(new Vector(rnd.Next((int)(minX + radius), (int)(maxX/3 - radius)), rnd.Next((int)(minY + radius), (int)(maxY/3 + radius))));
@@ -206,36 +202,28 @@ namespace Entropy
                 // Create histograms
                 CreateHistograms();
 
-                // Calculate clustering ('reverse entropy')
-                int clustering = 0;
-                for (int i = 0; i < gridX; i++)
-                    clustering += histX[i] * histX[i];
-                if (clustering > maxClusteringX)
+                // Calculate average distance
+                var sum = 0.0;
+                for (int i = 0; i < nrParticles; i++)
+                    for (int j = i + 1; j < nrParticles; j++)
+                    {
+                        var p1 = positions[i];
+                        var p2 = positions[j];
+                        sum += Math.Sqrt((p1.x - p2.x) * (p1.x - p2.x) + (p1.y - p2.y) * (p1.y - p2.y));
+                    }
+                var avgDistance = 2 * sum / (nrParticles * (nrParticles - 1));
+
+                // Update minumum
+                if (avgDistance < minAvgDistance)
                 {
-                    maxClusteringX = clustering;
-                    Save("maxX.txt");
-                }
-                clustering = 0;
-                for (int i = 0; i < gridY; i++)
-                    clustering += histY[i] * histY[i];
-                if (clustering > maxClusteringY)
-                {
-                    maxClusteringY = clustering;
-                    Save("maxY.txt");
-                }
-                clustering = 0;
-                for (int i = 1; i < gridX; i++)
-                    clustering += (histX[i] + histX[i - 1]) * (histY[i] + histY[i - 1]);
-                if (clustering > maxClusteringXY)
-                {
-                    maxClusteringXY = clustering;
-                    Save("maxXY.txt");
+                    minAvgDistance = avgDistance;
+                    Save("Smin.txt");
                 }
 
                 iterations++;
-                if (((TimeSpan)(DateTime.Now - start)).TotalSeconds >= 1)
+                if (((TimeSpan)(DateTime.Now - start)).TotalSeconds >= 1.0)
                 {
-                    UpdateLabel();
+                    UpdateLabels();
                     start = DateTime.Now;
                 }
                 if (chkDisplayMotion.Checked)
@@ -364,10 +352,8 @@ namespace Entropy
             histogramY.Max = gridX / 2;
 
             iterations = 0;
-            maxClusteringX = 0;
-            maxClusteringY = 0;
-            maxClusteringXY = 0;
-            UpdateLabel();
+            minAvgDistance = 0.0;
+            UpdateLabels();
 
             continuation = false;
         }
@@ -376,14 +362,12 @@ namespace Entropy
         {
             using (StreamWriter w = new StreamWriter(fName, false))
             {
-                w.WriteLine("Particles: " + particles.ToString());
+                w.WriteLine("Particles: " + nrParticles.ToString());
                 w.WriteLine("Grid: " + gridX.ToString() + "x" + gridY.ToString());
                 w.WriteLine("Max. init. velocity: " + maxInitVx.ToString() + "," + maxInitVx.ToString());
                 w.WriteLine("Seed: " + seed.ToString());
                 w.WriteLine("Iteration: " + iterations.ToString());
-                w.WriteLine("Max. clustering X: " + maxClusteringX.ToString());
-                w.WriteLine("Max. clustering Y: " + maxClusteringY.ToString());
-                w.WriteLine("Max. clustering XY: " + maxClusteringXY.ToString());
+                w.WriteLine("Min. entropy sum: " + minAvgDistance.ToString("0.0"));
                 w.WriteLine();
                 w.WriteLine("Positions");
                 for (int i = 0; i < positions.Count; i++)
@@ -406,30 +390,20 @@ namespace Entropy
             base.OnClosing(e);
         }
 
-        private delegate void UpdateLabelDelegate();
-
-        private void UpdateLabel()
+        private void UpdateLabels()
         {
-            this.Invoke(new UpdateLabelDelegate(UpdateLabelTS));
-        }
-
-        private void UpdateLabelTS()
-        {
-            lblIterations.Text = iterations.ToString("0,0");
-            lblClusteringX.Text = maxClusteringX.ToString();
-            lblClusteringY.Text = maxClusteringY.ToString();
-            lblClusteringXY.Text = maxClusteringXY.ToString();
+            this.Invoke((Action)(() =>
+            {
+                lblIterations.Text = iterations.ToString("0,0");
+                lblEntropy.Text = (iterations > 0) ? Math.Log(minAvgDistance).ToString("0.000") : "---";
+            }));
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             string fName = "";
-            if (sender == btnLoadX)
-                fName = "maxX.txt";
-            else if (sender == btnLoadY)
-                fName = "maxY.txt";
-            else if (sender == btnLoadXY)
-                fName = "maxXY.txt";
+            if (sender == btnLoadMin)
+                fName = "Smin.txt";
             else
                 fName = "state.txt";
 
@@ -439,7 +413,7 @@ namespace Entropy
             char[] sep2 = new char[] { ',' };
             using (StreamReader r = new StreamReader(fName))
             {
-                particles = int.Parse(r.ReadLine().Split(sep0, StringSplitOptions.None)[1]);
+                nrParticles = int.Parse(r.ReadLine().Split(sep0, StringSplitOptions.None)[1]);
 
                 s = r.ReadLine().Split(sep0, StringSplitOptions.None)[1];
                 gridX = int.Parse(s.Split(sep1)[0]);
@@ -451,11 +425,9 @@ namespace Entropy
 
                 r.ReadLine();
                 iterations = int.Parse(r.ReadLine().Split(sep0, StringSplitOptions.None)[1]);
-                maxClusteringX = int.Parse(r.ReadLine().Split(sep0, StringSplitOptions.None)[1]);
-                maxClusteringY = int.Parse(r.ReadLine().Split(sep0, StringSplitOptions.None)[1]);
-                maxClusteringXY = int.Parse(r.ReadLine().Split(sep0, StringSplitOptions.None)[1]);
+                minAvgDistance = double.Parse(r.ReadLine().Split(sep0, StringSplitOptions.None)[1]);
 
-                UpdateLabel();
+                UpdateLabels();
                 grid = new List<int>[gridX, gridY];
                 for (int i = 0; i < gridX; i++)
                     for (int j = 0; j < gridY; j++)
@@ -464,7 +436,7 @@ namespace Entropy
                 rnd = new Random(seed);
 
                 settings.Grid = gridX;
-                settings.Particles = particles;
+                settings.NrParticles = nrParticles;
                 settings.MaxInitVx = maxInitVx;
                 settings.MaxInitVy = maxInitVy;
                 settings.Seed = seed;
@@ -472,7 +444,7 @@ namespace Entropy
 
                 respondToChange = false;
                 cmbGrid.SelectedItem = gridX.ToString();
-                cmbParticles.SelectedItem = particles.ToString();
+                cmbParticles.SelectedItem = nrParticles.ToString();
                 cmbMaxInitVx.SelectedItem = maxInitVx.ToString();
                 cmbMaxInitVy.SelectedItem = maxInitVy.ToString();
                 cmbSeed.SelectedItem = seed.ToString();
@@ -481,7 +453,7 @@ namespace Entropy
                 positions.Clear();
                 r.ReadLine();
                 r.ReadLine();
-                for (int k = 0; k < particles; k++)
+                for (int k = 0; k < nrParticles; k++)
                 {
                     s = r.ReadLine();
                     positions.Add(new Vector(double.Parse(s.Split(sep2)[0]), double.Parse(s.Split(sep2)[1])));
@@ -491,7 +463,7 @@ namespace Entropy
                 velocities.Clear();
                 r.ReadLine();
                 r.ReadLine();
-                for (int k = 0; k < particles; k++)
+                for (int k = 0; k < nrParticles; k++)
                 {
                     s = r.ReadLine();
                     velocities.Add(new Vector(double.Parse(s.Split(sep2)[0]), double.Parse(s.Split(sep2)[1])));
@@ -501,7 +473,7 @@ namespace Entropy
                 brushes.Clear();
                 r.ReadLine();
                 r.ReadLine();
-                for (int k = 0; k < particles; k++)
+                for (int k = 0; k < nrParticles; k++)
                 {
                     s = r.ReadLine();
                     colors.Add(Color.FromArgb(int.Parse(s.Split(sep2)[0]), int.Parse(s.Split(sep2)[1]), int.Parse(s.Split(sep2)[2])));
@@ -557,9 +529,7 @@ namespace Entropy
                 if (!continuation)
                     Initialize();
                 btnStart.Text = "Stop";
-                btnLoadX.Enabled = false;
-                btnLoadY.Enabled = false;
-                btnLoadXY.Enabled = false;
+                btnLoadMin.Enabled = false;
                 btnSave.Enabled = false;
                 btnLoad.Enabled = false;
                 btnReset.Enabled = false;
@@ -584,9 +554,7 @@ namespace Entropy
                     Thread.Sleep(33);
                 runThread.Abort();
                 btnStart.Text = "Start";
-                btnLoadX.Enabled = true;
-                btnLoadY.Enabled = true;
-                btnLoadXY.Enabled = true;
+                btnLoadMin.Enabled = true;
                 btnSave.Enabled = true;
                 btnLoad.Enabled = File.Exists("state.txt");
                 btnReset.Enabled = true;
@@ -605,7 +573,7 @@ namespace Entropy
             if (!respondToChange) return;
 
             gridX = gridY = settings.Grid = int.Parse(cmbGrid.SelectedItem as string);
-            particles = settings.Particles = int.Parse(cmbParticles.SelectedItem as string);
+            nrParticles = settings.NrParticles = int.Parse(cmbParticles.SelectedItem as string);
             maxInitVx = settings.MaxInitVx = int.Parse(cmbMaxInitVx.SelectedItem as string);
             maxInitVy = settings.MaxInitVy = int.Parse(cmbMaxInitVy.SelectedItem as string);
             seed = settings.Seed = int.Parse(cmbSeed.SelectedItem as string);

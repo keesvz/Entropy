@@ -38,12 +38,12 @@ namespace Entropy.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int Particles {
+        public int NrParticles {
             get {
-                return ((int)(this["Particles"]));
+                return ((int)(this["NrParticles"]));
             }
             set {
-                this["Particles"] = value;
+                this["NrParticles"] = value;
             }
         }
         
