@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Entropy
@@ -317,21 +316,21 @@ namespace Entropy
         {
             var count = 0;
             histX.Clear();
-            Parallel.For(0, gridX, i =>
+            for (var i = 0; i < gridX; i++)
             {
                 count = 0;
                 for (int j = 0; j < gridY; j++)
                     count += grid[i, j].Count;
                 histX.Add(count);
-            });
+            }
             histY.Clear();
-            Parallel.For(0, gridY, j =>
+            for (var j = 0; j < gridY; j++)
             {
                 count = 0;
                 for (int i = 0; i < gridX; i++)
                     count += grid[i, j].Count;
                 histY.Add(count);
-            });
+            }
         }
 
         private void Reset()
@@ -368,7 +367,7 @@ namespace Entropy
                 w.WriteLine("Max. init. velocity: " + maxInitVx.ToString() + "," + maxInitVx.ToString());
                 w.WriteLine("Seed: " + seed.ToString());
                 w.WriteLine("Iteration: " + iterations.ToString());
-                w.WriteLine("Min. entropy sum: " + minAvgDistance.ToString("0.0"));
+                w.WriteLine("Min. avg distance: " + minAvgDistance.ToString());
                 w.WriteLine();
                 w.WriteLine("Positions");
                 for (int i = 0; i < positions.Count; i++)
