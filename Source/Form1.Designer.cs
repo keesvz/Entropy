@@ -30,12 +30,8 @@ namespace Entropy
         {
             this.lblIterations = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnLoadMin = new System.Windows.Forms.Button();
             this.chkDisplayMotion = new System.Windows.Forms.CheckBox();
             this.btnStart = new System.Windows.Forms.Button();
-            this.histogramY = new Entropy.Histogram();
-            this.histogramX = new Entropy.Histogram();
-            this.canvas = new Entropy.DrawingCanvas();
             this.cmbSeed = new System.Windows.Forms.ComboBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -49,14 +45,18 @@ namespace Entropy
             this.btnReset = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
+            this.btnLoadMin = new System.Windows.Forms.Button();
             this.lblEntropy = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.histogramY = new Entropy.Histogram();
+            this.histogramX = new Entropy.Histogram();
+            this.canvas = new Entropy.DrawingCanvas();
             this.SuspendLayout();
             // 
             // lblIterations
             // 
             this.lblIterations.AutoSize = true;
-            this.lblIterations.Location = new System.Drawing.Point(598, 305);
+            this.lblIterations.Location = new System.Drawing.Point(598, 291);
             this.lblIterations.Name = "lblIterations";
             this.lblIterations.Size = new System.Drawing.Size(16, 13);
             this.lblIterations.TabIndex = 2;
@@ -65,21 +65,11 @@ namespace Entropy
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(520, 184);
+            this.label4.Location = new System.Drawing.Point(520, 170);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(76, 13);
             this.label4.TabIndex = 2;
             this.label4.Text = "Random seed:";
-            // 
-            // btnLoadMin
-            // 
-            this.btnLoadMin.Location = new System.Drawing.Point(670, 323);
-            this.btnLoadMin.Name = "btnLoadMin";
-            this.btnLoadMin.Size = new System.Drawing.Size(57, 24);
-            this.btnLoadMin.TabIndex = 3;
-            this.btnLoadMin.Text = "Load";
-            this.btnLoadMin.UseVisualStyleBackColor = true;
-            this.btnLoadMin.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // chkDisplayMotion
             // 
@@ -87,7 +77,7 @@ namespace Entropy
             this.chkDisplayMotion.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.chkDisplayMotion.Checked = true;
             this.chkDisplayMotion.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkDisplayMotion.Location = new System.Drawing.Point(520, 217);
+            this.chkDisplayMotion.Location = new System.Drawing.Point(519, 200);
             this.chkDisplayMotion.Name = "chkDisplayMotion";
             this.chkDisplayMotion.Size = new System.Drawing.Size(94, 17);
             this.chkDisplayMotion.TabIndex = 4;
@@ -96,7 +86,7 @@ namespace Entropy
             // 
             // btnStart
             // 
-            this.btnStart.Location = new System.Drawing.Point(601, 246);
+            this.btnStart.Location = new System.Drawing.Point(601, 232);
             this.btnStart.Name = "btnStart";
             this.btnStart.Size = new System.Drawing.Size(57, 24);
             this.btnStart.TabIndex = 3;
@@ -104,37 +94,10 @@ namespace Entropy
             this.btnStart.UseVisualStyleBackColor = true;
             this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
-            // histogramY
-            // 
-            this.histogramY.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.histogramY.Horizontal = false;
-            this.histogramY.Location = new System.Drawing.Point(26, 43);
-            this.histogramY.Name = "histogramY";
-            this.histogramY.Size = new System.Drawing.Size(75, 400);
-            this.histogramY.TabIndex = 1;
-            // 
-            // histogramX
-            // 
-            this.histogramX.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.histogramX.Horizontal = true;
-            this.histogramX.Location = new System.Drawing.Point(100, 442);
-            this.histogramX.Name = "histogramX";
-            this.histogramX.Size = new System.Drawing.Size(400, 75);
-            this.histogramX.TabIndex = 1;
-            // 
-            // canvas
-            // 
-            this.canvas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.canvas.Location = new System.Drawing.Point(100, 43);
-            this.canvas.Name = "canvas";
-            this.canvas.ScaleFactor = 0D;
-            this.canvas.Size = new System.Drawing.Size(400, 400);
-            this.canvas.TabIndex = 0;
-            // 
             // cmbSeed
             // 
             this.cmbSeed.FormattingEnabled = true;
-            this.cmbSeed.Location = new System.Drawing.Point(600, 181);
+            this.cmbSeed.Location = new System.Drawing.Point(600, 167);
             this.cmbSeed.Name = "cmbSeed";
             this.cmbSeed.Size = new System.Drawing.Size(47, 21);
             this.cmbSeed.TabIndex = 5;
@@ -143,7 +106,7 @@ namespace Entropy
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(520, 305);
+            this.label5.Location = new System.Drawing.Point(520, 291);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(53, 13);
             this.label5.TabIndex = 2;
@@ -152,7 +115,7 @@ namespace Entropy
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(520, 62);
+            this.label6.Location = new System.Drawing.Point(520, 48);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(29, 13);
             this.label6.TabIndex = 2;
@@ -169,11 +132,8 @@ namespace Entropy
             "75",
             "100",
             "150",
-            "250",
-            "500",
-            "750",
-            "1000"});
-            this.cmbGrid.Location = new System.Drawing.Point(600, 59);
+            "250"});
+            this.cmbGrid.Location = new System.Drawing.Point(600, 45);
             this.cmbGrid.Name = "cmbGrid";
             this.cmbGrid.Size = new System.Drawing.Size(47, 21);
             this.cmbGrid.TabIndex = 5;
@@ -182,7 +142,7 @@ namespace Entropy
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(520, 93);
+            this.label7.Location = new System.Drawing.Point(520, 79);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(50, 13);
             this.label7.TabIndex = 2;
@@ -208,7 +168,7 @@ namespace Entropy
             "5000",
             "7500",
             "10000"});
-            this.cmbParticles.Location = new System.Drawing.Point(600, 90);
+            this.cmbParticles.Location = new System.Drawing.Point(600, 76);
             this.cmbParticles.Name = "cmbParticles";
             this.cmbParticles.Size = new System.Drawing.Size(47, 21);
             this.cmbParticles.TabIndex = 5;
@@ -217,7 +177,7 @@ namespace Entropy
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(520, 123);
+            this.label8.Location = new System.Drawing.Point(520, 109);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(61, 13);
             this.label8.TabIndex = 2;
@@ -240,7 +200,7 @@ namespace Entropy
             "500",
             "750",
             "1000"});
-            this.cmbMaxInitVx.Location = new System.Drawing.Point(600, 120);
+            this.cmbMaxInitVx.Location = new System.Drawing.Point(600, 106);
             this.cmbMaxInitVx.Name = "cmbMaxInitVx";
             this.cmbMaxInitVx.Size = new System.Drawing.Size(47, 21);
             this.cmbMaxInitVx.TabIndex = 5;
@@ -249,7 +209,7 @@ namespace Entropy
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(520, 153);
+            this.label9.Location = new System.Drawing.Point(520, 139);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(61, 13);
             this.label9.TabIndex = 2;
@@ -272,7 +232,7 @@ namespace Entropy
             "500",
             "750",
             "1000"});
-            this.cmbMaxInitVy.Location = new System.Drawing.Point(600, 150);
+            this.cmbMaxInitVy.Location = new System.Drawing.Point(600, 136);
             this.cmbMaxInitVy.Name = "cmbMaxInitVy";
             this.cmbMaxInitVy.Size = new System.Drawing.Size(47, 21);
             this.cmbMaxInitVy.TabIndex = 5;
@@ -280,7 +240,8 @@ namespace Entropy
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(670, 246);
+            this.btnReset.Enabled = false;
+            this.btnReset.Location = new System.Drawing.Point(670, 232);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(57, 24);
             this.btnReset.TabIndex = 3;
@@ -291,7 +252,7 @@ namespace Entropy
             // btnSave
             // 
             this.btnSave.Enabled = false;
-            this.btnSave.Location = new System.Drawing.Point(601, 272);
+            this.btnSave.Location = new System.Drawing.Point(601, 258);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(57, 24);
             this.btnSave.TabIndex = 3;
@@ -301,7 +262,7 @@ namespace Entropy
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(670, 272);
+            this.btnLoad.Location = new System.Drawing.Point(670, 258);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(57, 24);
             this.btnLoad.TabIndex = 3;
@@ -309,29 +270,70 @@ namespace Entropy
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
+            // btnLoadMin
+            // 
+            this.btnLoadMin.Enabled = false;
+            this.btnLoadMin.Location = new System.Drawing.Point(671, 313);
+            this.btnLoadMin.Name = "btnLoadMin";
+            this.btnLoadMin.Size = new System.Drawing.Size(57, 24);
+            this.btnLoadMin.TabIndex = 8;
+            this.btnLoadMin.Text = "Load";
+            this.btnLoadMin.UseVisualStyleBackColor = true;
+            this.btnLoadMin.Click += new System.EventHandler(this.btnLoad_Click);
+            // 
             // lblEntropy
             // 
             this.lblEntropy.AutoSize = true;
-            this.lblEntropy.Location = new System.Drawing.Point(598, 329);
+            this.lblEntropy.Location = new System.Drawing.Point(599, 319);
             this.lblEntropy.Name = "lblEntropy";
             this.lblEntropy.Size = new System.Drawing.Size(16, 13);
-            this.lblEntropy.TabIndex = 2;
+            this.lblEntropy.TabIndex = 6;
             this.lblEntropy.Text = "---";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(520, 329);
+            this.label1.Location = new System.Drawing.Point(521, 319);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(39, 13);
-            this.label1.TabIndex = 2;
+            this.label1.TabIndex = 7;
             this.label1.Text = "S(min):";
+            // 
+            // histogramY
+            // 
+            this.histogramY.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.histogramY.Horizontal = false;
+            this.histogramY.Location = new System.Drawing.Point(26, 29);
+            this.histogramY.Name = "histogramY";
+            this.histogramY.Size = new System.Drawing.Size(75, 400);
+            this.histogramY.TabIndex = 1;
+            // 
+            // histogramX
+            // 
+            this.histogramX.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.histogramX.Horizontal = true;
+            this.histogramX.Location = new System.Drawing.Point(100, 428);
+            this.histogramX.Name = "histogramX";
+            this.histogramX.Size = new System.Drawing.Size(400, 75);
+            this.histogramX.TabIndex = 1;
+            // 
+            // canvas
+            // 
+            this.canvas.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.canvas.Location = new System.Drawing.Point(100, 29);
+            this.canvas.Name = "canvas";
+            this.canvas.ScaleFactor = 0D;
+            this.canvas.Size = new System.Drawing.Size(400, 400);
+            this.canvas.TabIndex = 0;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(759, 531);
+            this.Controls.Add(this.btnLoadMin);
+            this.Controls.Add(this.lblEntropy);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.cmbParticles);
             this.Controls.Add(this.cmbGrid);
             this.Controls.Add(this.cmbMaxInitVy);
@@ -342,23 +344,22 @@ namespace Entropy
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnStart);
-            this.Controls.Add(this.btnLoadMin);
-            this.Controls.Add(this.lblEntropy);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblIterations);
             this.Controls.Add(this.histogramY);
             this.Controls.Add(this.histogramX);
             this.Controls.Add(this.canvas);
             this.DoubleBuffered = true;
+            this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(775, 570);
             this.MinimumSize = new System.Drawing.Size(775, 570);
             this.Name = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Entropy";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -372,7 +373,6 @@ namespace Entropy
         private Histogram histogramY;
         private System.Windows.Forms.Label lblIterations;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnLoadMin;
         private System.Windows.Forms.CheckBox chkDisplayMotion;
         private System.Windows.Forms.Button btnStart;
         private System.Windows.Forms.ComboBox cmbSeed;
@@ -388,6 +388,7 @@ namespace Entropy
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.Button btnLoadMin;
         private System.Windows.Forms.Label lblEntropy;
         private System.Windows.Forms.Label label1;
     }

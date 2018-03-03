@@ -25,7 +25,7 @@ namespace Entropy.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("25")]
         public int Grid {
             get {
                 return ((int)(this["Grid"]));
@@ -37,7 +37,7 @@ namespace Entropy.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
         public int NrParticles {
             get {
                 return ((int)(this["NrParticles"]));

@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Entropy")]
-[assembly: AssemblyDescription("Estimate 'reverse entropy' of a set of moving 2D-particles inside a 2D box")]
+[assembly: AssemblyDescription("Visualize the motion of particles while keeping track of degree of chaos")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Sunny Side Up Software")]
 [assembly: AssemblyProduct("Entropy")]
-[assembly: AssemblyCopyright("Copyright ©  2010")]
+[assembly: AssemblyCopyright("Copyright © 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -29,5 +29,5 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("3.0.0.0")]
+[assembly: AssemblyFileVersion("3.0.0.0")]
